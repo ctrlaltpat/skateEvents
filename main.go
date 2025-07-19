@@ -5,14 +5,20 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 var port = ":5178"
 
 func main() {
+	router := chi.NewRouter()
+	router.Use(middleware.Logger)
+
+	router.Get("/welcome", basicHandler)
+
 	server := &http.Server{
 		Addr:    port,
-		Handler: http.HandlerFunc(basicHandler),
+		Handler: router,
 	}
 
 	fmt.Println("Server is running on http://localhost" + port)
@@ -24,6 +30,6 @@ func main() {
 }
 
 func basicHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Hello, World!")
-	w.Write([]byte("Hello, World!"))
+	fmt.Println("Welcome!")
+	w.Write([]byte("Welcome!"))
 }
