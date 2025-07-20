@@ -1,13 +1,5 @@
 package models
 
-import (
-	"database/sql"
-)
-
-type EventModel struct {
-	DB *sql.DB
-}
-
 type Event struct {
 	Id          int    `json:"id"`
 	OwnerId     int    `json:"owner_id" binding:"required"`

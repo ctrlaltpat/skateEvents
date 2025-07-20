@@ -1,13 +1,5 @@
 package models
 
-import (
-	"database/sql"
-)
-
-type SkateModel struct {
-	DB *sql.DB
-}
-
 type Skate struct {
 	Id       int    `json:"id"`
 	SkaterId int    `json:"skater_id" binding:"required"`
