@@ -2,11 +2,22 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 
+	"github.com/ctrlaltpat/skate-events/internal/env"
+	"github.com/ctrlaltpat/skate-events/internal/handlers"
+	"github.com/ctrlaltpat/skate-events/internal/repositories"
+	"github.com/ctrlaltpat/skate-events/internal/services"
+	_ "github.com/joho/godotenv/autoload"
 	_ "github.com/mattn/go-sqlite3"
 )
+
+type application struct {
+	port      int
+	jwtSecret string
+	db        *sql.DB
+	handlers  *handlers.Handlers
+}
 
 func main() {
 	db, err := sql.Open(("sqlite3"), "./data.db")
@@ -16,40 +27,18 @@ func main() {
 
 	defer db.Close()
 
-	quickTest(db)
-}
+	repos := repositories.NewRepositories(db)
+	services := services.NewServices(repos)
+	handlers := handlers.NewHandlers(services)
 
-func quickTest(db *sql.DB) {
-	sts := `
-INSERT INTO users (email, name, password) VALUES('ctrlaltpat@gmail.com', 'Patrick', 'password');
-INSERT INTO users (email, name, password) VALUES('inevitable@gmail.com', 'Thanos', 'password');
-`
-	_, err := db.Exec(sts)
-
-	if err != nil {
-		log.Fatal(err)
+	app := &application{
+		port:      env.GetEnvInt("PORT", 5178),
+		jwtSecret: env.GetEnvString("JWT_SECRET", "super-secret-key-88"),
+		db:        db,
+		handlers:  handlers,
 	}
 
-	rows, err := db.Query("SELECT id, name, email FROM users")
-
-	if err != nil {
+	if err := app.serve(); err != nil {
 		log.Fatal(err)
-	}
-
-	defer rows.Close()
-
-	for rows.Next() {
-
-		var id int
-		var name string
-		var email string
-
-		err = rows.Scan(&id, &name, &email)
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		fmt.Printf("%d %s %s\n", id, name, email)
 	}
 }
