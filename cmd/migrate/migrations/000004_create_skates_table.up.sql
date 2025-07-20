@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS skates (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    skater_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    brand TEXT NOT NULL,
+    plates TEXT NOT NULL,
+    wheels TEXT NOT NULL,
+    FOREIGN KEY (skater_id) REFERENCES users (id) ON DELETE CASCADE
+);

@@ -1,4 +1,0 @@
-@MySkatesGo_HostAddress = http://localhost:5178
-
-GET {{MySkatesGo_HostAddress}}/
-Accept: application/json

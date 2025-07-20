@@ -1,0 +1,4 @@
+@SkateEventsGo_HostAddress = http://localhost:5178
+
+GET {{SkateEventsGo_HostAddress}}/
+Accept: application/json
