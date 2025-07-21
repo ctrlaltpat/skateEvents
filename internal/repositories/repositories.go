@@ -3,11 +3,13 @@ package repositories
 import "database/sql"
 
 type Repositories struct {
-	User UserRepository
+	Event EventRepository
+	User  UserRepository
 }
 
 func NewRepositories(db *sql.DB) *Repositories {
 	return &Repositories{
-		User: UserRepository{DB: db},
+		Event: EventRepository{DB: db},
+		User:  UserRepository{DB: db},
 	}
 }

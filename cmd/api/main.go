@@ -8,8 +8,8 @@ import (
 	"github.com/ctrlaltpat/skate-events/internal/handlers"
 	"github.com/ctrlaltpat/skate-events/internal/repositories"
 	"github.com/ctrlaltpat/skate-events/internal/services"
-	_ "github.com/joho/godotenv/autoload"
 	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/joho/godotenv/autoload"
 )
 
 type application struct {

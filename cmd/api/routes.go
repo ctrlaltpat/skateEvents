@@ -21,6 +21,13 @@ func (app *application) routes() http.Handler {
 	g.Use(cors.New(config))
 
 	v1 := g.Group("/api/v1")
+	{
+		v1.POST("/events", app.handlers.Event.CreateEvent)
+		v1.GET("/events", app.handlers.Event.GetAllEvents)
+		v1.GET("/events/:id", app.handlers.Event.GetEvent)
+		v1.PUT("/events/:id", app.handlers.Event.UpdateEvent)
+		v1.DELETE("/events/:id", app.handlers.Event.DeleteEvent)
+	}
 
 	v1.POST("/auth/register", app.handlers.User.RegisterUser)
 
