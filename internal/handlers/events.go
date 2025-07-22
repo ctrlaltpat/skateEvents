@@ -93,9 +93,13 @@ func (h *EventHandler) DeleteEvent(c *gin.Context) {
 		return
 	}
 
-	err = h.Service.Delete(c.Request.Context(), id)
+	rows, err := h.Service.Delete(c.Request.Context(), id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete event"})
+		return
+	}
+	if rows == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Event not found"})
 		return
 	}
 

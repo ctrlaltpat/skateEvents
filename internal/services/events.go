@@ -48,11 +48,11 @@ func (svc EventService) Update(ctx context.Context, id int, event *models.Event)
 	return event, nil
 }
 
-func (svc EventService) Delete(ctx context.Context, id int) error {
-	err := svc.Repo.Delete(ctx, id)
+func (svc EventService) Delete(ctx context.Context, id int) (int64, error) {
+	rows, err := svc.Repo.Delete(ctx, id)
 	if err != nil {
 		log.Println("Error deleting event")
-		return err
+		return rows, err
 	}
-	return nil
+	return rows, nil
 }

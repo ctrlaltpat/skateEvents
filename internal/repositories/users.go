@@ -13,7 +13,7 @@ type UserRepository struct {
 }
 
 func (repo UserRepository) Insert(ctx context.Context, user *models.User) (*models.User, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
 	stmt := `INSERT INTO users (email, password, name) VALUES ($1, $2, $3) RETURNING id`

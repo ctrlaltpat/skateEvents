@@ -13,7 +13,7 @@ type EventRepository struct {
 }
 
 func (repo EventRepository) Insert(ctx context.Context, event *models.Event) (*models.Event, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
 	query := "INSERT INTO events (owner_id, name, description, date, location) VALUES ($1, $2, $3, $4, $5) RETURNING id"
@@ -27,7 +27,7 @@ func (repo EventRepository) Insert(ctx context.Context, event *models.Event) (*m
 }
 
 func (repo EventRepository) GetAll(ctx context.Context) ([]models.Event, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
 	query := "SELECT * FROM events"
@@ -57,7 +57,7 @@ func (repo EventRepository) GetAll(ctx context.Context) ([]models.Event, error) 
 }
 
 func (repo EventRepository) Get(ctx context.Context, id int) (*models.Event, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
 	query := "SELECT * FROM events WHERE id = $1"
@@ -78,7 +78,7 @@ func (repo EventRepository) Get(ctx context.Context, id int) (*models.Event, err
 }
 
 func (repo EventRepository) Update(ctx context.Context, id int, event *models.Event) (*models.Event, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
 	query := "UPDATE events SET name = $1, description = $2, date = $3, location = $4 WHERE id = $5"
@@ -91,15 +91,19 @@ func (repo EventRepository) Update(ctx context.Context, id int, event *models.Ev
 	return event, nil
 }
 
-func (repo EventRepository) Delete(ctx context.Context, id int) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+func (repo EventRepository) Delete(ctx context.Context, id int) (int64, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
 	query := "DELETE FROM events WHERE id = $1"
 
-	_, err := repo.DB.ExecContext(ctx, query, id)
+	res, err := repo.DB.ExecContext(ctx, query, id)
 	if err != nil {
-		return err
+		return 0, err
 	}
-	return nil
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return 0, err
+	}
+	return rowsAffected, nil
 }

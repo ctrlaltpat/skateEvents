@@ -1,4 +1,40 @@
-@SkateEventsGo_HostAddress = http://localhost:5178
+@SkateEventsGo_HostAddress = http://localhost:5179
 
 GET {{SkateEventsGo_HostAddress}}/
 Accept: application/json
+
+### GET ALL EVENTS
+GET {{SkateEventsGo_HostAddress}}/api/v1/events HTTP/1.1
+Content-Type: application/json
+
+### CREATE EVENT
+POST {{SkateEventsGo_HostAddress}}/api/v1/events HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "BoNaNa Street Skate",
+  "owner_id": 1,
+  "description": "A bi-weekly street skate on a Sunday evening.",
+  "date": "2025-07-27T18:00:00Z",
+  "location": "Kings Cross, London"
+}
+
+### GET EVENT BY ID
+GET {{SkateEventsGo_HostAddress}}/api/v1/events/6 HTTP/1.1
+Content-Type: application/json
+
+### UPDATE EVENT
+PUT {{SkateEventsGo_HostAddress}}/api/v1/events/6 HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "BoNaNa Street Skate (Roll On London Edition)",
+  "owner_id": 1,
+  "description": "A bi-weekly street skate on a Sunday evening.",
+  "date": "2025-07-27T19:00:00Z",
+  "location": "Bethnal Green, London"
+}
+
+### DELETE EVENT
+DELETE {{SkateEventsGo_HostAddress}}/api/v1/events/3 HTTP/1.1
+Content-Type: application/json
