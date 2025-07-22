@@ -27,6 +27,7 @@ func (app *application) routes() http.Handler {
 		v1.GET("/events/:id", app.handlers.Event.GetEvent)
 		v1.PUT("/events/:id", app.handlers.Event.UpdateEvent)
 		v1.DELETE("/events/:id", app.handlers.Event.DeleteEvent)
+		v1.PATCH("/events/:id/status", app.handlers.Event.UpdateEventStatus)
 
 		v1.POST("/events/:id/rsvp/:userId", app.handlers.Event.AddAttendeeToEvent)
 		v1.GET("/events/:id/attendees", app.handlers.Event.GetAttendeesByEventId)

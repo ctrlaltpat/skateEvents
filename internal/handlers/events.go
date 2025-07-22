@@ -87,6 +87,31 @@ func (h *EventHandler) UpdateEvent(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Event updated successfully", "event": updatedEvent})
 }
 
+func (h *EventHandler) UpdateEventStatus(c *gin.Context) {
+    idStr := c.Param("id")
+    id, err := strconv.Atoi(idStr)
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid event ID"})
+        return
+    }
+
+    var req struct {
+        Status string `json:"status" binding:"required,oneof=draft live started ended completed cancelled archived"`
+    }
+    if err := c.ShouldBindJSON(&req); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
+
+    updatedEvent, err := h.EventService.UpdateStatus(c.Request.Context(), id, req.Status)
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update event status"})
+        return
+    }
+
+    c.JSON(http.StatusOK, gin.H{"message": "Event status updated", "event": updatedEvent})
+}
+
 func (h *EventHandler) DeleteEvent(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -131,6 +156,10 @@ func (h *EventHandler) AddAttendeeToEvent(c *gin.Context) {
 	}
 	if event == nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Event not found"})
+		return
+	}
+	if event.Status != "live" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Event is not live"})
 		return
 	}
 
