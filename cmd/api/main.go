@@ -8,8 +8,8 @@ import (
 	"github.com/ctrlaltpat/skate-events/internal/handlers"
 	"github.com/ctrlaltpat/skate-events/internal/repositories"
 	"github.com/ctrlaltpat/skate-events/internal/services"
-	_ "github.com/mattn/go-sqlite3"
 	_ "github.com/joho/godotenv/autoload"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type application struct {
@@ -27,13 +27,15 @@ func main() {
 
 	defer db.Close()
 
+	var jwtSecret string = env.GetEnvString("JWT_SECRET", "super-secret-key-88")
+
 	repos := repositories.NewRepositories(db)
 	services := services.NewServices(repos)
-	handlers := handlers.NewHandlers(services)
+	handlers := handlers.NewHandlers(services, jwtSecret)
 
 	app := &application{
 		port:      env.GetEnvInt("PORT", 5178),
-		jwtSecret: env.GetEnvString("JWT_SECRET", "super-secret-key-88"),
+		jwtSecret: jwtSecret,
 		db:        db,
 		handlers:  handlers,
 	}

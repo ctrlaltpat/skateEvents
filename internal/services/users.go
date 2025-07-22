@@ -29,3 +29,12 @@ func (svc UserService) GetById(ctx context.Context, id int) (*models.User, error
 	}
 	return user, nil
 }
+
+func (svc UserService) GetByEmail(ctx context.Context, email string) (*models.User, error) {
+	user, err := svc.Repo.GetByEmail(ctx, email)
+	if err != nil {
+		log.Println("Error getting user by email")
+		return nil, err
+	}
+	return user, nil
+}

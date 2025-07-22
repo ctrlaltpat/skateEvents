@@ -7,9 +7,9 @@ type Handlers struct {
 	User  *UserHandler
 }
 
-func NewHandlers(services *services.Services) *Handlers {
+func NewHandlers(services *services.Services, jwtSecret string) *Handlers {
 	return &Handlers{
 		Event: &EventHandler{EventService: services.Event, UserService: services.User},
-		User:  &UserHandler{Service: services.User},
+		User:  &UserHandler{Service: services.User, JWTSecret: jwtSecret},
 	}
 }
