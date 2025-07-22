@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/ctrlaltpat/skate-events/internal/models"
 	"github.com/ctrlaltpat/skate-events/internal/services"
@@ -46,4 +47,26 @@ func (h *UserHandler) RegisterUser(c *gin.Context) {
 
 	createdUser.Password = ""
 	c.JSON(http.StatusCreated, createdUser)
+}
+
+func (h *UserHandler) GetUser(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		return
+	}
+
+	user, err := h.Service.GetById(c.Request.Context(), id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get user"})
+		return
+	}
+
+	if user == nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
 }

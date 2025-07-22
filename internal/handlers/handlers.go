@@ -9,7 +9,7 @@ type Handlers struct {
 
 func NewHandlers(services *services.Services) *Handlers {
 	return &Handlers{
-		Event: &EventHandler{Service: services.Event},
+		Event: &EventHandler{EventService: services.Event, UserService: services.User},
 		User:  &UserHandler{Service: services.User},
 	}
 }

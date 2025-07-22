@@ -9,7 +9,7 @@ type Services struct {
 
 func NewServices(repos *repositories.Repositories) *Services {
 	return &Services{
-		Event: EventService{Repo: repos.Event},
+		Event: EventService{EventRepo: repos.Event, AttendeeRepo: repos.Attendee},
 		User:  UserService{Repo: repos.User},
 	}
 }
